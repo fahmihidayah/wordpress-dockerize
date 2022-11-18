@@ -1,0 +1,53 @@
+version: '3.3'
+
+services:
+
+  db:
+    image: mysql
+    container_name: mysql
+    restart: unless-stopped
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    env_file: .env
+    ports:
+      - 3306:3306
+    environment:
+      - "MYSQL_DATABASE=${MYSQL_DATABASE}"
+      - "MYSQL_USER=${MYSQL_USER}"
+      - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+      - "MYSQL_PASSWORD=${MYSQL_PASSWORD}"
+    volumes:
+      - db:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:6.1.1-fpm
+    container_name: wordpress
+    restart: unless-stopped
+    env_file: .env
+    expose:
+      - 9000
+    environment:
+      - "WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}"
+      - "WORDPRESS_DB_USER=${WORDPRESS_DB_USER}"
+      - "WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}"
+      - "WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}"
+    volumes:
+      - wordpress:/var/www/html
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - wordpress://var/www/html
+    ports:
+      - 8111:80
+      - 433:433
+    depends_on:
+      - wordpress
+
+volumes:
+  wordpress:
+  db:
