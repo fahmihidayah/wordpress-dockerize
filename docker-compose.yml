@@ -43,7 +43,7 @@ services:
       - ./nginx:/etc/nginx/conf.d
       - wordpress://var/www/html
     ports:
-      - 8111:80
+      - 80:80
       - 433:433
     depends_on:
       - wordpress
