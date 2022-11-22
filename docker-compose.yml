@@ -41,13 +41,13 @@ services:
     restart: unless-stopped
     volumes:
       - ./nginx:/etc/nginx/conf.d
-      - wordpress://var/www/html
+      - ./wordpress:/var/www/html
+      - ./certbotdata:/etc/letsencrypt
     ports:
       - 80:80
       - 433:433
     depends_on:
       - wordpress
 
-volumes:
-  wordpress:
-  db:
+  volumes:
+    db:

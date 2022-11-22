@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:latest
+    command: certonly --webroot --webroot-path=/var/www/html --email fahmi.hidayah.cs@gmail.com --agree-tos --no-eff-email -d fahmihidayah.com -d www.fahmihidayah.com
+    volumes:
+      - ./certbotdata:/etc/letsencrypt
+      - ./wordpress:/var/www/html
